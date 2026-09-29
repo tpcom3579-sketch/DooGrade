@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f2f5ef">
+    <title>ตรวจสอบเกรดนักเรียน</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --ink: #183b35;
+            --muted: #61736d;
+            --paper: #f2f5ef;
+            --panel: #ffffff;
+            --green: #246653;
+            --lime: #d8ef8a;
+            --line: #dce5dc;
+            --coral: #e5795b;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            display: grid;
+            place-items: center;
+            padding: 28px 18px;
+            color: var(--ink);
+            background-color: var(--paper);
+            background-image: linear-gradient(rgba(36, 102, 83, .045) 1px, transparent 1px), linear-gradient(90deg, rgba(36, 102, 83, .045) 1px, transparent 1px);
+            background-size: 28px 28px;
+            font-family: Tahoma, "Leelawadee UI", sans-serif;
+        }
+
+        main {
+            width: min(100%, 560px);
+            overflow: hidden;
+            border: 1px solid rgba(24, 59, 53, .12);
+            border-radius: 8px;
+            background: var(--panel);
+            box-shadow: 0 20px 60px rgba(24, 59, 53, .1);
+            animation: arrive .45s ease-out both;
+        }
+
+        .topline {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .brand-mark {
+            display: grid;
+            width: 30px;
+            height: 30px;
+            place-items: center;
+            border-radius: 6px;
+            color: var(--ink);
+            background: var(--lime);
+            font-size: 17px;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .status::before {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #62a77d;
+            content: "";
+        }
+
+        .content { padding: 34px 32px 30px; }
+
+        .eyebrow {
+            margin: 0 0 8px;
+            color: var(--green);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(25px, 6vw, 34px);
+            line-height: 1.35;
+        }
+
+        .intro {
+            margin: 10px 0 26px;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        form { display: grid; gap: 10px; }
+
+        label {
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .entry-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        input {
+            width: 100%;
+            min-width: 0;
+            height: 50px;
+            padding: 0 14px;
+            border: 1px solid #cbd8ce;
+            border-radius: 6px;
+            outline: none;
+            color: var(--ink);
+            background: #fbfcfa;
+            font: inherit;
+            font-size: 18px;
+            letter-spacing: 2px;
+            transition: border-color .15s, box-shadow .15s;
+        }
+
+        input::placeholder { color: #a5b2aa; }
+
+        input:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px rgba(36, 102, 83, .12);
+        }
+
+        button {
+            min-width: 132px;
+            min-height: 50px;
+            padding: 0 18px;
+            border: 0;
+            border-radius: 6px;
+            color: #fff;
+            background: var(--green);
+            font: inherit;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background .15s, transform .15s;
+        }
+
+        button:hover { background: #1b5142; }
+        button:active { transform: translateY(1px); }
+        button:focus-visible { outline: 3px solid var(--coral); outline-offset: 2px; }
+
+        .result {
+            min-height: 106px;
+            margin-top: 24px;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            background: #f7f9f5;
+        }
+
+        .result-label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .result-value {
+            color: var(--ink);
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .grade {
+            color: var(--green);
+            font-size: 40px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .grade[hidden] { display: none; }
+
+        footer {
+            padding: 14px 32px;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        @keyframes arrive {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 440px) {
+            .topline { padding: 16px 18px; }
+            .content { padding: 28px 20px 24px; }
+            .entry-row { flex-direction: column; }
+            button { width: 100%; }
+            footer { padding-inline: 20px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <header class="topline">
+            <div class="brand"><span class="brand-mark" aria-hidden="true">✓</span>ระบบตรวจสอบผลการเรียน</div>
+            <span class="status">พร้อมใช้งาน</span>
+        </header>
+
+        <section class="content">
+            <p class="eyebrow">STUDENT RECORDS</p>
+            <h1>ตรวจสอบเกรด</h1>
+            <p class="intro">กรอกรหัสนักเรียน 5 หลัก เพื่อค้นหาผลการเรียน</p>
+
+            <form id="lookup-form" novalidate>
+                <label for="student-id">รหัสนักเรียน</label>
+                <div class="entry-row">
+                    <input id="student-id" name="student-id" type="text" inputmode="numeric" autocomplete="off" maxlength="5" placeholder="เช่น 30643" aria-describedby="result-message" required>
+                    <button type="submit">ค้นหาเกรด</button>
+                </div>
+            </form>
+
+            <div class="result" aria-live="polite" aria-atomic="true">
+                <div>
+                    <span class="result-label">ผลการค้นหา</span>
+                    <span class="result-value" id="result-message">กรอกรหัสนักเรียนเพื่อเริ่มค้นหา</span>
+                </div>
+                <span class="grade" id="grade-value" hidden></span>
+            </div>
+        </section>
+
+        <footer>แสดงเฉพาะเกรดของรหัสนักเรียนที่ค้นหา</footer>
+    </main>
+
+    <script>
+        const gradesByStudentId = {
+            "30643": "1",
+            "30645": "3.5",
+            "30689": "4",
+            "30722": "4",
+            "30726": "4",
+            "30734": "3",
+            "30735": "4",
+            "30769": "4"
+        };
+
+        const form = document.querySelector("#lookup-form");
+        const studentIdInput = document.querySelector("#student-id");
+        const resultMessage = document.querySelector("#result-message");
+        const gradeValue = document.querySelector("#grade-value");
+
+        form.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const studentId = studentIdInput.value.trim();
+            gradeValue.hidden = true;
+
+            if (!/^\d{5}$/.test(studentId)) {
+                resultMessage.textContent = "กรุณากรอกรหัสนักเรียนเป็นตัวเลข 5 หลัก";
+                studentIdInput.focus();
+                return;
+            }
+
+            const grade = gradesByStudentId[studentId];
+            if (grade === undefined) {
+                resultMessage.textContent = "ไม่พบรหัสนักเรียนนี้ในข้อมูล";
+                return;
+            }
+
+            resultMessage.textContent = "เกรด";
+            gradeValue.textContent = grade;
+            gradeValue.hidden = false;
+        });
+    </script>
+</body>
+</html>
